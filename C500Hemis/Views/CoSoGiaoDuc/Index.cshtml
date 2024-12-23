@@ -1,0 +1,575 @@
+﻿@model IEnumerable<C500Hemis.Models.TbCoSoGiaoDuc>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<link href="~/css/styles.css" rel="stylesheet" />
+<style>
+    body{
+        background-color: #fff9e9;
+    }
+
+    .table th:first-child,
+    .table td:first-child {
+        position: sticky;
+        left: 0; /* Cố định vị trí bên trái */
+        background-color: white; /* Màu nền cho cột cố định */
+        z-index: 10; /* Đảm bảo cột này nằm trên các cột khác */
+    }
+
+    .table tbody tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+
+    th {
+        white-space: nowrap; /* Đảm bảo nội dung không bị xuống dòng */
+        background-color: #31473a !important;
+        color: #edf4f2;
+        text-align: center;
+    }
+
+
+    .inline-block {
+        display: inline-flex;
+        flex-wrap: nowrap;
+        justify-content: space-evenly;
+        align-items: baseline;
+    }
+
+        .inline-block label {
+            margin-right: 5px; /* Khoảng cách giữa label và select */
+            margin-bottom: 3px;
+        }
+
+    .card-footers {
+        padding: 4px 16px 4px 16px;
+        color: var(--bs-card-cap-color);
+        background-color: var(--bs-card-cap-bg);
+        border-top: var(--bs-card-border-width) solid var(--bs-card-border-color);
+    }
+
+    .dataTables_scroll {
+        padding-top: 15px;
+    }
+
+    .modal-dialog {
+        max-width: 70%; /* Tăng chiều rộng của modal */
+    }
+
+    .modal-body {
+        height: 80vh; /* Chiều cao tương đối của nội dung modal */
+        overflow: auto;
+    }
+
+    .btn-delete {
+        background-color: #dc3f1c; /* Màu đỏ cho Xóa bỏ */
+    }
+
+        .btn-delete:hover {
+            background-color: #df8584;
+            transform: scale(1.05); /* Tạo hiệu ứng phóng to nhẹ khi hover */
+        }
+
+    .btn-edit {
+        background-color: #88a764; /* Màu xanh lá cho Chỉnh sửa */
+    }
+
+        .btn-edit:hover {
+            background-color: #f5f6b4;
+            transform: scale(1.05); /* Tạo hiệu ứng phóng to nhẹ khi hover */
+        }
+
+    .btn-details {
+        background-color: #8fc8d9; /* Màu xanh dương nhạt cho Chi tiết */
+    }
+
+        .btn-details:hover {
+            background-color: #c4faf0;
+            transform: scale(1.05); /* Tạo hiệu ứng phóng to nhẹ khi hover */
+        }
+
+    /* Đặt màu nền cho các hàng lẻ */
+    table.dataTable tbody tr:nth-child(odd) {
+        background-color: white; /* Màu nền cho hàng lẻ */
+    }
+
+    /* Hiệu ứng hover với transition */
+    table.dataTable tbody tr {
+        transition: background-color 0.3s ease; /* Hiệu ứng mượt khi hover */
+    }
+
+        table.dataTable tbody tr:hover {
+            background-color: #ececee;
+        }
+    /* Màu hover */
+        }
+
+        /* Tùy chọn thêm để thay đổi màu chữ */
+        table.dataTable tbody tr td {
+            padding: 8px; /* Thêm padding cho các ô */
+        }
+</style>
+
+<h1 class="mt-4" style="text-align:center; margin-bottom:40px;"><b>CƠ SỞ GIÁO DỤC</b></h1>
+
+<div class="row">
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body" style="font-weight: bold;">Tạo Mới</div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" asp-action="Create">Create</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-warning text-white mb-4">
+            <div class="card-body" style="font-weight: bold;">Xuất Excel</div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" asp-action="ExportToExcel">ExportToExcel</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-success text-white mb-4">
+            <div class="card-body" style="font-weight: bold;">Upload File</div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" asp-action="Import">Import</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-danger text-white mb-4">
+            <div class="inline-block">
+                <label for="chartType" style="font-weight: bold;">Chọn loại biểu đồ:</label>
+                <select id="chartType">
+                    <option value="pie">Biểu đồ tròn</option>
+                    <option value="bar">Biểu đồ cột</option>
+                    <option value="line">Biểu đồ đường</option>
+                </select>
+            </div>
+
+            <div class="inline-block">
+                <label for="dataType" style="font-weight: bold;">Chọn loại dữ liệu:</label>
+                <select id="dataType">
+                    <option value="1">Hoạt động KLN</option>
+                    <option value="2">Cơ quan chủ quán</option>
+                    <option value="3">Hình Thức TL</option>
+                    <option value="4">Loài Hình CSĐT</option>
+                    <option value="5">Loại Hình Trường</option>
+                    <option value="6">Phân Loại CS</option>
+                    <option value="7">Tỉnh</option>
+                    <option value="8">Huyện</option>
+                    <option value="9">Xã</option>
+                    <option value="10">Tự Chủ GDQPAN</option>
+                </select>
+            </div>
+
+            <div class="card-footers d-flex align-items-center justify-content-between" stylt="padding-bottom: 5px !important;padding-top: 5px !important;">
+                <button id="showChart" data-toggle="modal" data-target="#chartModal" style="width: 100%; border: none; font-weight: bold;">
+                    Hiển Thị Biểu Đồ
+                </button>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="chartModal" tabindex="-1" role="dialog" aria-labelledby="chartModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="chartModalLabel">Biểu Đồ Cơ Sở Giáo Dục</h5>
+            </div>
+            <div class="modal-body">
+                <canvas id="myChart" width="1200" height="600"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid px-4">
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Bảng thống kê
+        </div>
+        <div class="card-body">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Actions</th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdCoSoGiaoDuc)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MaDonVi)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TenDonVi)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TenTiengAnh)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SoQuyetDinhChuyenDoiLoaiHinh)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NgayKyQuyetDinhChuyenDoiLoaiHinh)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TenDaiHocTrucThuoc)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SoDienThoai)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Fax)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DiaChiWebsite)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SoQuyetDinhThanhLap)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NgayKyQuyetDinhThanhLap)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DiaChi)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SoQuyetDinhCapPhepHoatDong)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NgayDuocCapPhepHoatDong)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SoGiaoVienGdtc)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SoQuyetDinhGiaoTuChu)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DaoTaoSvgdqpan1nam)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SoQuyetDinhBanHanhQuyCheTaiChinh)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NgayKyQuyetDinhBanHanhQuyCheTaiChinh)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HoatDongKhongLoiNhuanNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdCoQuanChuQuanNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdHinhThucThanhLapNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdLoaiHinhCoSoDaoTaoNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdLoaiHinhTruongNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdPhanLoaiCoSoNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdTinhNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdHuyenNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdXaNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TuChuGiaoDucQpanNavigation)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                            <td style="text-align:center;">
+                                <a asp-action="Edit" asp-route-id="@item.IdCoSoGiaoDuc" class="btn btn-edit" title="Sửa" data-toggle="tooltip">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.IdCoSoGiaoDuc" class="btn btn-details" title="Xem Chi Tiết" data-toggle="tooltip">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.IdCoSoGiaoDuc" class="btn btn-delete" title="Xóa" data-toggle="tooltip">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdCoSoGiaoDuc)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MaDonVi)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TenDonVi)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TenTiengAnh)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SoQuyetDinhChuyenDoiLoaiHinh)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NgayKyQuyetDinhChuyenDoiLoaiHinh)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TenDaiHocTrucThuoc)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SoDienThoai)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Fax)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DiaChiWebsite)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SoQuyetDinhThanhLap)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NgayKyQuyetDinhThanhLap)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DiaChi)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SoQuyetDinhCapPhepHoatDong)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NgayDuocCapPhepHoatDong)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SoGiaoVienGdtc)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SoQuyetDinhGiaoTuChu)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DaoTaoSvgdqpan1nam)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SoQuyetDinhBanHanhQuyCheTaiChinh)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NgayKyQuyetDinhBanHanhQuyCheTaiChinh)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HoatDongKhongLoiNhuanNavigation.TuyChon)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdCoQuanChuQuanNavigation.CoQuanChuQuan)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdHinhThucThanhLapNavigation.HinhThucThanhLap)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdLoaiHinhCoSoDaoTaoNavigation.LoaiHinhCoSoDaoTao)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdLoaiHinhTruongNavigation.LoaiHinhTruong)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdPhanLoaiCoSoNavigation.PhanLoaiCoSo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdTinhNavigation.TenTinh)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdHuyenNavigation.TenHuyen)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdXaNavigation.TenXa)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TuChuGiaoDucQpanNavigation.TuyChon)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<!-- FixedHeader CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.2.1/css/fixedHeader.dataTables.min.css">
+
+<!-- FixedHeader JS -->
+<script src="https://cdn.datatables.net/fixedheader/3.2.1/js/dataTables.fixedHeader.min.js"></script>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+<script>
+    $(document).ready(function () {
+        var table = new DataTable('.table', {
+            scrollY: "560px", // Chiều cao cuộn của nội dung bảng
+            scrollCollapse: true, // Cho phép bảng co lại nếu dữ liệu ít
+            paging: true, // Phân trang
+            scrollX: true, // Cho phép cuộn ngang
+            lengthMenu: [5, 10, 15, 20, 25, 30], // Đặt các giá trị cho menu số bản ghi
+            language: {
+                processing: "Đang tải dữ liệu", // Thông báo khi dữ liệu đang được xử lý
+                search: "Tìm nhanh: ", // Văn bản cho ô tìm kiếm
+                lengthMenu: "Số bản ghi hiển thị trên trang _MENU_ ", // Tùy chọn số bản ghi hiển thị
+                info: "Tổng bản ghi: _TOTAL_", // Hiển thị thông tin tổng số bản ghi
+                infoEmpty: "Chưa có nội dung nào trong danh sách", // Thông báo khi không có dữ liệu
+                infoFiltered: "",
+                loadingRecords: "Đang tải...", // Thông báo khi đang tải dữ liệu
+                zeroRecords: "Không tìm thấy dữ liệu!", // Thông báo khi không tìm thấy dữ liệu
+                emptyTable: "Không có dữ liệu nào!", // Thông báo khi không có dữ liệu trong bảng
+                paginate: {
+                    first: "Trang đầu", // Nút chuyển đến trang đầu
+                    previous: "Trang trước", // Nút chuyển về trang trước
+                    next: "Trang sau", // Nút chuyển đến trang sau
+                    last: "Trang cuối" // Nút chuyển đến trang cuối
+                },
+                aria: {
+                    sortAscending: ": Đang sắp xếp tăng dần", // Thông báo khi sắp xếp tăng dần
+                    sortDescending: ": Đang sắp xếp giảm dần" // Thông báo khi sắp xếp giảm dần
+                }
+            } // Đóng đối tượng language
+        }); // Đóng hàm DataTable
+    }); // Đóng hàm ready
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+
+<script>
+    // Biến toàn cục để lưu trữ biểu đồ
+    let myChart;
+
+    $(document).ready(function () {
+        $('#showChart').click(function () {
+            var selectedChartType = $('#chartType').val();
+            var selectedDataType = $('#dataType').val();
+
+            // Gọi API để lấy dữ liệu
+            $.get('/CoSoGiaoDuc/ChartData', { dataType: selectedDataType }, function (data) {
+                displayChart(selectedChartType, data.labels, data.values); // Hiển thị biểu đồ
+                $('#chartModal').modal('show'); // Hiển thị modal
+            });
+        });
+    });
+
+    function displayChart(type, labels, values) {
+        // Hủy biểu đồ cũ nếu tồn tại
+        if (myChart) {
+            myChart.destroy();
+        }
+
+        // Tạo biểu đồ mới
+        var ctx = document.getElementById('myChart').getContext('2d');
+        myChart = new Chart(ctx, {
+            type: type, // Loại biểu đồ được chọn
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Số lượng',
+                    data: values,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true, // Đảm bảo biểu đồ phản hồi với khung chứa
+                maintainAspectRatio: false, // Cho phép điều chỉnh tỷ lệ biểu đồ
+                plugins: {
+                    legend: {
+                        display: true, // Bật chú thích (legend)
+                        position: 'top', // Vị trí của chú thích (top, bottom, left, right)
+                        labels: {
+                            font: {
+                                size: 12 // Cỡ chữ chú thích
+                            },
+                            boxWidth: 20 // Kích thước ô vuông màu trong chú thích
+                        }
+                    },
+                    title: {
+                        display: true, // Hiển thị tiêu đề biểu đồ
+                        text: 'Số lượng',
+                        font: {
+                            size: 18,
+                            weight: 'bold'
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 10
+                        }
+                    }
+                },
+                scales: type === 'pie' ? {} : { // Chỉ áp dụng thang đo cho biểu đồ không phải "pie"
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Phòng ban'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Số lượng'
+                        }
+                    }
+                },
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 10,
+                        top: 10,
+                        bottom: 10
+                    }
+                }
+            }
+
+        });
+    }
+</script>
