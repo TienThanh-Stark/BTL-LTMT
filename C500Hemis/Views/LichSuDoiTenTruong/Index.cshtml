@@ -131,6 +131,9 @@
                 <thead>
                     <tr>
                         <th>
+                            @Html.DisplayNameFor(model => model.IdLichSuDoiTenTruong)
+                        </th>
+                        <th>
                             @Html.DisplayNameFor(model => model.TenTruongCu)
                         </th>
                         <th>
@@ -149,6 +152,9 @@
                     @foreach (var item in Model)
                     {
                         <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IdLichSuDoiTenTruong)
+                            </td> 
                             <td>
                                 @Html.DisplayFor(modelItem => item.TenTruongCu)
                             </td>

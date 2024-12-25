@@ -73,7 +73,9 @@ public partial class TbCoSoGiaoDuc
     [Display(Name = "HOẠT ĐỘNG KHÔNG LỢI NHUẬN")]
     public int? HoatDongKhongLoiNhuan { get; set; }
 
+    [Display(Name = "SỐ QĐ CẤP PHÉP HĐ")]
     public string? SoQuyetDinhCapPhepHoatDong { get; set; }
+
     [Display(Name = "NGÀY RA ĐƯỢC CẤP PHÉP HĐ")]
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]

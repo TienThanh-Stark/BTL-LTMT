@@ -149,6 +149,9 @@
                 <thead>
                     <tr>
                         <th>
+                            @Html.DisplayNameFor(model => model.IdDonViLienKetDaoTaoGiaoDuc)
+                        </th>
+                        <th>
                             @Html.DisplayNameFor(model => model.DiaChi)
                         </th>
                         <th>
@@ -169,6 +172,9 @@
 
                     {
                         <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IdDonViLienKetDaoTaoGiaoDuc)
+                            </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.DiaChi)
                             </td>
