@@ -80,8 +80,7 @@ namespace C500Hemis.Controllers.CSGD
         }
 
         // POST: LichSuDoiTenTruong/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Tạo bản ghi mới
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdLichSuDoiTenTruong,TenTruongCu,TenTruongCuTiengAnh,SoQuyetDinhDoiTen,NgayKyQuyetDinhDoiTen")] TbLichSuDoiTenTruong tbLichSuDoiTenTruong)
@@ -127,12 +126,11 @@ namespace C500Hemis.Controllers.CSGD
         }
 
         // POST: LichSuDoiTenTruong/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdLichSuDoiTenTruong,TenTruongCu,TenTruongCuTiengAnh,SoQuyetDinhDoiTen,NgayKyQuyetDinhDoiTen")] TbLichSuDoiTenTruong tbLichSuDoiTenTruong)
         {
+            //Kiểm tra dữ liệu đầu vào
             try
             {
                 if (id != tbLichSuDoiTenTruong.IdLichSuDoiTenTruong)
@@ -206,6 +204,7 @@ namespace C500Hemis.Controllers.CSGD
             }
         }
 
+        //kiểm tra xem một bản ghi trong bảng có tồn tại hay không
         private async Task<bool> TbLichSuDoiTenTruongExists(int id)
         {
             var tbLichSuDoiTenTruongs = await ApiServices_.GetAll<TbLichSuDoiTenTruong>("/api/csgd/LichSuDoiTenTruong");
