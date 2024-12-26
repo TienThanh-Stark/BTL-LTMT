@@ -79,7 +79,7 @@
 </style>
 
 <h5>CƠ SỞ GIÁO DỤC</h5>
-<h1 class="mt-4" style="text-align:center; margin-bottom:40px;">Văn bản từ chữ</h1>
+<h1 class="mt-4" style="text-align:center; margin-bottom:40px;">Văn Bản Từ Chữ</h1>
 <div class="row">
     <div class="col-xl-3 col-md-6">
         <div class="card bg-primary text-white mb-4">
@@ -111,8 +111,10 @@
     <div class="col-xl-3 col-md-6">
         <div class="card bg-danger text-white mb-4">
             <div class="card-body" style="font-weight: bold;">Biểu Đồ</div>
-            <div class="card-footer d-flex align-items-center justify-content-between" style="padding-top: 3.5px; padding-bottom: 3px;">
-                <button class="btn btn-primary" data-toggle="modal" data-target="#chartModal">Hiển thị Biểu Đồ</button>
+            <div class="card-footer d-flex align-items-center justify-content-between" style="padding-bottom: 6px; padding-top: 11px;">
+                <button id="showChart" data-toggle="modal" data-target="#chartModal" style="width: 100%; border: none; font-weight: bold;">
+                    Hiển Thị Biểu Đồ
+                </button>
                 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
             </div>
         </div>
@@ -190,7 +192,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="chartModalLabel">Biểu Đồ Cơ Cấu Tổ Chức</h5>
+                <h5 class="modal-title" id="chartModalLabel">Biểu Văn Bản Từ Chữ</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -215,7 +217,7 @@
                     data: {
                         labels: data.labels, // Nhãn từ dữ liệu JSON
                         datasets: [{
-                            label: 'Số lượng phòng ban',
+                            label: 'Số lượng',
                             data: data.values, // Giá trị từ dữ liệu JSON
                             backgroundColor: [
                                 'rgba(255, 99, 132, 0.2)',

@@ -435,7 +435,7 @@
 <script>
     $(document).ready(function () {
         var table = new DataTable('.table', {
-            scrollY: "560px", // Chiều cao cuộn của nội dung bảng
+            // scrollY: "560px", // Chiều cao cuộn của nội dung bảng
             scrollCollapse: true, // Cho phép bảng co lại nếu dữ liệu ít
             paging: true, // Phân trang
             scrollX: true, // Cho phép cuộn ngang
@@ -546,12 +546,6 @@
                     }
                 },
                 scales: type === 'pie' ? {} : { // Chỉ áp dụng thang đo cho biểu đồ không phải "pie"
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Phòng ban'
-                        }
-                    },
                     y: {
                         beginAtZero: true,
                         title: {
